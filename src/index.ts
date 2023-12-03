@@ -1,8 +1,7 @@
-import { Handler } from 'aws-lambda'
+import { APIGatewayEvent, Handler } from 'aws-lambda'
 
-export const handler: Handler = async (event) => {
-  console.log('Event: ', event)
-  let responseMessage = 'Hello, World!'
+export const handler: Handler<APIGatewayEvent> = async (event) => {
+  const name = event.queryStringParameters?.name
 
   return {
     statusCode: 200,
@@ -10,7 +9,7 @@ export const handler: Handler = async (event) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      message: responseMessage
+      message: 'Hello' + (name ? `, ${name}` : '')
     })
   }
 }
