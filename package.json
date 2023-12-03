@@ -1,0 +1,23 @@
+{
+	"main": "dist/index.js",
+	"scripts": {
+		"serve": "npx functions-framework --target=helloHttp",
+		"dev": "concurrently \"pnpm run watch\" \"nodemon --watch ./dist/ --exec pnpm run serve\"",
+		"build": "webpack",
+		"watch": "webpack -w",
+		"pretty": "prettier --write ."
+	},
+	"dependencies": {
+		"@google-cloud/functions-framework": "^3.3.0"
+	},
+	"devDependencies": {
+		"concurrently": "^8.2.2",
+		"nodemon": "^3.0.1",
+		"prettier": "^3.1.0",
+		"ts-loader": "^9.5.1",
+		"typescript": "^5.3.2",
+		"webpack": "^5.89.0",
+		"webpack-cli": "^5.1.4",
+		"webpack-node-externals": "^3.0.0"
+	}
+}
