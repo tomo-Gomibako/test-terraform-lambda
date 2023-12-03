@@ -1,16 +1,15 @@
 {
 	"main": "dist/index.js",
 	"scripts": {
-		"serve": "npx functions-framework --target=helloHttp",
-		"dev": "concurrently \"pnpm run watch\" \"nodemon --watch ./dist/ --exec pnpm run serve\"",
 		"build": "webpack",
 		"watch": "webpack -w",
 		"pretty": "prettier --write ."
 	},
 	"dependencies": {
-		"@google-cloud/functions-framework": "^3.3.0"
+		"aws-lambda": "^1.0.7"
 	},
 	"devDependencies": {
+		"@types/aws-lambda": "^8.10.130",
 		"concurrently": "^8.2.2",
 		"nodemon": "^3.0.1",
 		"prettier": "^3.1.0",

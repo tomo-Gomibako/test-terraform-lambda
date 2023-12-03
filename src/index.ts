@@ -1,23 +1,16 @@
-import { CloudEvent, cloudEvent, http } from '@google-cloud/functions-framework'
+import { Handler } from 'aws-lambda'
 
-http('helloHttp', (req, res) => {
-  const name = req.query.name?.toString()
+export const handler: Handler = async (event) => {
+  console.log('Event: ', event)
+  let responseMessage = 'Hello, World!'
 
-  res.send('Hello' + (name ? `, ${name}` : ''))
-})
-
-type PubSubEventData = {
-  message: {
-    data: string
+  return {
+    statusCode: 200,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: responseMessage
+    })
   }
 }
-
-cloudEvent('helloPubSub', (cloudEvent: CloudEvent<PubSubEventData>) => {
-  const base64name = cloudEvent.data?.message.data
-
-  const name = base64name
-    ? Buffer.from(base64name, 'base64').toString()
-    : 'World'
-
-  console.log(`Hello, ${name}!`)
-})
