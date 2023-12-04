@@ -34,12 +34,16 @@ provider "aws" {
 }
 
 resource "random_pet" "lambda_bucket_name" {
-  prefix = "learn-terraform-functions"
+  prefix = local.resource_prefix
   length = 4
 }
 
 resource "aws_s3_bucket" "lambda_bucket" {
   bucket = random_pet.lambda_bucket_name.id
+
+  tags = {
+    project = local.project_code
+  }
 }
 
 resource "aws_s3_bucket_ownership_controls" "lambda_bucket" {
@@ -80,6 +84,10 @@ resource "aws_s3_object" "lambda_hello_world" {
   source = data.archive_file.lambda_hello_world.output_path
 
   etag = filemd5(data.archive_file.lambda_hello_world.output_path)
+
+  tags = {
+    project = local.project_code
+  }
 }
 
 resource "aws_lambda_function" "hello_world" {
@@ -94,12 +102,20 @@ resource "aws_lambda_function" "hello_world" {
   source_code_hash = data.archive_file.lambda_hello_world.output_base64sha256
 
   role = aws_iam_role.lambda_exec.arn
+
+  tags = {
+    project = local.project_code
+  }
 }
 
 resource "aws_cloudwatch_log_group" "hello_world" {
   name = "/aws/lambda/${aws_lambda_function.hello_world.function_name}"
 
   retention_in_days = 30
+
+  tags = {
+    project = local.project_code
+  }
 }
 
 resource "aws_iam_role" "lambda_exec" {
@@ -117,6 +133,10 @@ resource "aws_iam_role" "lambda_exec" {
       }
     ]
   })
+
+  tags = {
+    project = local.project_code
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
@@ -127,6 +147,10 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
 resource "aws_apigatewayv2_api" "lambda" {
   name          = "serverless_lambda_gw"
   protocol_type = "HTTP"
+
+  tags = {
+    project = local.project_code
+  }
 }
 
 resource "aws_apigatewayv2_stage" "lambda" {
@@ -152,6 +176,10 @@ resource "aws_apigatewayv2_stage" "lambda" {
       }
     )
   }
+
+  tags = {
+    project = local.project_code
+  }
 }
 
 resource "aws_apigatewayv2_integration" "hello_world" {
@@ -173,6 +201,10 @@ resource "aws_cloudwatch_log_group" "api_gw" {
   name = "/aws/api_gw/${aws_apigatewayv2_api.lambda.name}"
 
   retention_in_days = 30
+
+  tags = {
+    project = local.project_code
+  }
 }
 
 resource "aws_lambda_permission" "api_gw" {
