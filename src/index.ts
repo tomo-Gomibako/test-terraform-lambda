@@ -1,6 +1,6 @@
 import { APIGatewayEvent, Handler } from 'aws-lambda'
 
-export const handler: Handler<APIGatewayEvent> = async (event) => {
+export const httpHandler: Handler<APIGatewayEvent> = async (event) => {
   const name = event.queryStringParameters?.name
 
   return {
@@ -12,4 +12,10 @@ export const handler: Handler<APIGatewayEvent> = async (event) => {
       message: 'Hello' + (name ? `, ${name}` : '')
     })
   }
+}
+
+export const cronHandler: Handler<string> = async (payload) => {
+  const name = payload
+
+  console.log(`Hello, ${name}!`)
 }
